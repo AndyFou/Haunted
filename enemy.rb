@@ -2,7 +2,7 @@ class Enemy
   attr_reader :x, :y, :radius     # shortcut for GETters
 
   def initialize(window)
-    @radius = 20
+    @radius = 50
     @x = rand(window.width - 2 * @radius) + @radius
     @y = rand(window.height - 2 * @radius) + @radius
     @image = Gosu::Image.new('images/pumpkin.png')
