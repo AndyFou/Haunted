@@ -48,7 +48,7 @@ class Haunted < Gosu::Window
     unless @playing
       draw_quad(0,0,@go_color,900,0,@go_color,900,900,@go_color,0,900,@go_color)
       @game_over.draw('Game Over!', 300, 300, 3, 1.0, 1.0, 0xff_ffff00)
-      @welcome.draw('Press the Space Bar to Play Again', 225, 400, 3)
+      @welcome.draw('Press Enter to Play Again', 280, 400, 3)
     end
   end
 
@@ -67,7 +67,7 @@ class Haunted < Gosu::Window
   end
 
   def button_down(id)
-    if (id == Gosu::KbEnter)
+    if (id == Gosu::KbReturn)
       @playing = true
       @start_time = Gosu.milliseconds
       ### how to reset the player position??
