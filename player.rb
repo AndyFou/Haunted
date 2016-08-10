@@ -15,7 +15,7 @@ class Player
   end
 
   def draw
-    @image.draw_rot(@x, @y, 1, @angle)
+    @image.draw_rot(@x, @y, 0, @angle)
   end
 
   def turn_right
