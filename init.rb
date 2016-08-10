@@ -27,7 +27,8 @@ class Haunted < Gosu::Window
     @game_over = Gosu::Font.new(72)
 
     @playing = true
-    @color = Gosu::Color::BLACK
+    @go_color = Gosu::Color::BLACK
+    @start_time = 0
   end
 
   def draw             ## draw the items of the game
@@ -42,11 +43,12 @@ class Haunted < Gosu::Window
     # Draw fonts
     @welcome.draw("Welcome to Haunted!", 10, 10, 0, 1.0, 1.0, 0xff_ffff00)
     @credits.draw("Background Image: www.freevectors.net, Other Images: www.iconarchive.com", 10, 880, 0, 1.0, 1.0, 0xff_ffffff)
-    @time.draw(@time_left.to_s, 870, 10, 0, 1.0, 1.0, 0xff_ffff00)
+    @time.draw(@time_left.to_s, 850, 10, 0, 1.0, 1.0, 0xff_ffff00)
 
     unless @playing
-      draw_quad(0,0,@color,900,0,@color,900,900,@color,0,900,@color)
+      draw_quad(0,0,@go_color,900,0,@go_color,900,900,@go_color,0,900,@go_color)
       @game_over.draw('Game Over!', 300, 300, 3, 1.0, 1.0, 0xff_ffff00)
+      @welcome.draw('Press the Space Bar to Play Again', 225, 400, 3)
     end
   end
 
@@ -58,9 +60,17 @@ class Haunted < Gosu::Window
       @player.goback if button_down?(Gosu::KbDown)
       @player.move
 
-      @time_left = (10 - (Gosu.milliseconds / 1000))
+      @time_left = (10 - ((Gosu.milliseconds - @start_time) / 1000))
 
       @playing = false if @time_left <= 0
+    end
+  end
+
+  def button_down(id)
+    if (id == Gosu::KbSpace)
+      @playing = true
+      @start_time = Gosu.milliseconds
+      ### how to reset the player position??
     end
   end
 end
