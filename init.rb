@@ -6,7 +6,7 @@ require_relative 'bullet'
 class Haunted < Gosu::Window
   WIN_WIDTH = 900
   WIN_HEIGHT = 900
-  ENEMY_FREQUENCY = 0.5
+  ENEMY_FREQUENCY = 0.005
   # TARGET_WIDTH = 750
   # TARGET_HEIGHT = 780
   # TARGET_RADIUS = 50
@@ -18,7 +18,7 @@ class Haunted < Gosu::Window
     # Create images
     @background_image = Gosu::Image.new("images/background.jpg", :tileable => true)
     @star = Gosu::Image.new("images/star.png")
-    @target = Gosu::Image.new("images/pumpkin.png")
+    #@target = Gosu::Image.new("images/pumpkin.png")
     #@graveyard = Gosu::Image.new("images/graveyard.png")
 
     # Create a player (from player.rb file)
@@ -35,6 +35,7 @@ class Haunted < Gosu::Window
     @playing = true
     @go_color = Gosu::Color::BLACK
     @start_time = 0
+    @score = 0
   end
 
   def draw             ## draw the items of the game
@@ -43,8 +44,11 @@ class Haunted < Gosu::Window
     @star.draw(150, 680, 0)
     #@graveyard.draw(500, 760, 0)
 
-    @target.draw(TARGET_WIDTH,TARGET_HEIGHT,0)
+    #@target.draw(TARGET_WIDTH,TARGET_HEIGHT,0)
     @player.draw
+    @enemies.each do |enemy|
+      enemy.draw
+    end
     @bullets.each do |bullet|
       bullet.draw
     end
@@ -52,7 +56,7 @@ class Haunted < Gosu::Window
     # Draw fonts
     @welcome.draw("Welcome to Haunted!", 10, 10, 0, 1.0, 1.0, 0xff_ffff00)
     @credits.draw("Background Image: www.freevectors.net, Other Images: www.iconarchive.com", 10, 880, 0, 1.0, 1.0, 0xff_ffffff)
-    @time.draw(@time_left.to_s, 850, 10, 0, 1.0, 1.0, 0xff_ffff00)
+    @time.draw("Score: " + @score.to_s + " \t Time: " + @time_left.to_s, 650, 10, 0, 1.0, 1.0, 0xff_ffff00)
 
     unless @playing
       draw_quad(0,0,@go_color,900,0,@go_color,900,900,@go_color,0,900,@go_color)
@@ -73,14 +77,22 @@ class Haunted < Gosu::Window
         bullet.move
       end
 
+      if rand < ENEMY_FREQUENCY
+        @enemies.push Enemy.new(self)
+      end
+
       @time_left = (10 - ((Gosu.milliseconds - @start_time) / 1000))
 
       @playing = false if @time_left <= 0
 
-      @bullets.dup.each do |bullet|
-        distance = Gosu.distance(TARGET_WIDTH,TARGET_HEIGHT,bullet.x,bullet.y)
-        if distance < TARGET_RADIUS + bullet.radius
-          @bullets.delete bullet
+      @enemies.dup.each do |enemy|
+        @bullets.dup.each do |bullet|
+          distance = Gosu.distance(enemy.x, enemy.y, bullet.x, bullet.y)
+          if distance < enemy.radius + bullet.radius
+            @enemies.delete enemy
+            @bullets.delete bullet
+            @score += 1
+          end
         end
       end
     end
@@ -88,15 +100,19 @@ class Haunted < Gosu::Window
   end
 
   def button_down(id)
-    if(id == Gosu::KbReturn)
+    if id == Gosu::KbReturn
       @playing = true
       @start_time = Gosu.milliseconds
       ### how to reset the player position??
     end
 
-    if(id == Gosu::KbSpace)
+    if id == Gosu::KbSpace
       @bullets.push Bullet.new(self, @player.x, @player.y, @player.angle)
     end
+
+    # if id == Gosu::KbEscape
+    #   # terminate program
+    # end
   end
 end
 
