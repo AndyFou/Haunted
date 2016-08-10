@@ -7,7 +7,7 @@ class Player
     @x = 750
     @y = 750
     @angle = 0
-    @image = Gosu::Image.new('images/pumpkin.png')
+    @image = Gosu::Image.new('images/witch.png')
     @velocity_x = 0
     @velocity_y = 0
     @radius = 20
@@ -19,20 +19,22 @@ class Player
   end
 
   def turn_right
-    @angle += ROTATION_SPEED
+    #@angle += ROTATION_SPEED       # if left not move but change angle
+    @velocity_x += Gosu.offset_x(@angle+90, ACCELERATION)
   end
 
   def turn_left
-    @angle -= ROTATION_SPEED
+    #@angle -= ROTATION_SPEED       # if right not move but change angle
+    @velocity_x -= Gosu.offset_x(@angle+90, ACCELERATION)
   end
 
   def accelerate
-    @velocity_x += Gosu.offset_x(@angle, ACCELERATION)
+    #@velocity_x += Gosu.offset_x(@angle, ACCELERATION)     # if left & right not move but change angle
     @velocity_y += Gosu.offset_y(@angle, ACCELERATION)
   end
 
   def goback
-    @velocity_x -= Gosu.offset_x(@angle, ACCELERATION)
+    #@velocity_x -= Gosu.offset_x(@angle, ACCELERATION)     # if left & right not move but change angle
     @velocity_y -= Gosu.offset_y(@angle, ACCELERATION)
   end
 

@@ -4,8 +4,8 @@ require_relative 'player'
 class Haunted < Gosu::Window
   WIN_WIDTH = 900
   WIN_HEIGHT = 900
-  TARGET_WIDTH = 150
-  TARGET_HEIGHT = 680
+  TARGET_WIDTH = 750
+  TARGET_HEIGHT = 780
 
   def initialize       ## constructor
     super(WIN_WIDTH,WIN_HEIGHT)
@@ -13,8 +13,8 @@ class Haunted < Gosu::Window
 
     # Create images
     @background_image = Gosu::Image.new("images/background.jpg", :tileable => true)
-    @witch = Gosu::Image.new("images/witch.png")
-    @target = Gosu::Image.new("images/star.png")
+    @star = Gosu::Image.new("images/star.png")
+    @target = Gosu::Image.new("images/pumpkin.png")
     #@graveyard = Gosu::Image.new("images/graveyard.png")
 
     # Create a player (from player.rb file)
@@ -34,7 +34,7 @@ class Haunted < Gosu::Window
   def draw             ## draw the items of the game
     # Draw images
     @background_image.draw(0,0,0)
-    @witch.draw(450, 200, 0)
+    @star.draw(150, 680, 0)
     #@graveyard.draw(500, 760, 0)
 
     @target.draw(TARGET_WIDTH,TARGET_HEIGHT,0)
@@ -67,7 +67,7 @@ class Haunted < Gosu::Window
   end
 
   def button_down(id)
-    if (id == Gosu::KbSpace)
+    if (id == Gosu::KbEnter)
       @playing = true
       @start_time = Gosu.milliseconds
       ### how to reset the player position??
