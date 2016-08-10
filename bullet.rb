@@ -1,10 +1,11 @@
 class Bullet
   SPEED = 5
+  attr_reader :x, :y, :radius     # shortcut for GETters
 
   def initialize(window, x, y, angle)
     @x = x
     @y = y
-    @direction = angle
+    @direction = 90
     @image = Gosu::Image.new('images/candycorn-s.png')
     @radius = 3
     @window = window

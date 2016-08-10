@@ -1,12 +1,15 @@
 require 'gosu'
 require_relative 'player'
+require_relative 'enemy'
 require_relative 'bullet'
 
 class Haunted < Gosu::Window
   WIN_WIDTH = 900
   WIN_HEIGHT = 900
-  TARGET_WIDTH = 750
-  TARGET_HEIGHT = 780
+  ENEMY_FREQUENCY = 0.5
+  # TARGET_WIDTH = 750
+  # TARGET_HEIGHT = 780
+  # TARGET_RADIUS = 50
 
   def initialize       ## constructor
     super(WIN_WIDTH,WIN_HEIGHT)
@@ -20,6 +23,7 @@ class Haunted < Gosu::Window
 
     # Create a player (from player.rb file)
     @player = Player.new(self)
+    @enemies = []
     @bullets = []
 
     # Create fonts
@@ -72,7 +76,15 @@ class Haunted < Gosu::Window
       @time_left = (10 - ((Gosu.milliseconds - @start_time) / 1000))
 
       @playing = false if @time_left <= 0
+
+      @bullets.dup.each do |bullet|
+        distance = Gosu.distance(TARGET_WIDTH,TARGET_HEIGHT,bullet.x,bullet.y)
+        if distance < TARGET_RADIUS + bullet.radius
+          @bullets.delete bullet
+        end
+      end
     end
+
   end
 
   def button_down(id)
@@ -81,7 +93,7 @@ class Haunted < Gosu::Window
       @start_time = Gosu.milliseconds
       ### how to reset the player position??
     end
-    
+
     if(id == Gosu::KbSpace)
       @bullets.push Bullet.new(self, @player.x, @player.y, @player.angle)
     end
