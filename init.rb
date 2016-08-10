@@ -1,5 +1,6 @@
 require 'gosu'
 require_relative 'player'
+require_relative 'bullet'
 
 class Haunted < Gosu::Window
   WIN_WIDTH = 900
@@ -19,6 +20,7 @@ class Haunted < Gosu::Window
 
     # Create a player (from player.rb file)
     @player = Player.new(self)
+    @bullets = []
 
     # Create fonts
     @welcome = Gosu::Font.new(36)
@@ -39,6 +41,9 @@ class Haunted < Gosu::Window
 
     @target.draw(TARGET_WIDTH,TARGET_HEIGHT,0)
     @player.draw
+    @bullets.each do |bullet|
+      bullet.draw
+    end
 
     # Draw fonts
     @welcome.draw("Welcome to Haunted!", 10, 10, 0, 1.0, 1.0, 0xff_ffff00)
@@ -60,6 +65,10 @@ class Haunted < Gosu::Window
       @player.goback if button_down?(Gosu::KbDown)
       @player.move
 
+      @bullets.each do |bullet|
+        bullet.move
+      end
+
       @time_left = (10 - ((Gosu.milliseconds - @start_time) / 1000))
 
       @playing = false if @time_left <= 0
@@ -67,10 +76,14 @@ class Haunted < Gosu::Window
   end
 
   def button_down(id)
-    if (id == Gosu::KbReturn)
+    if(id == Gosu::KbReturn)
       @playing = true
       @start_time = Gosu.milliseconds
       ### how to reset the player position??
+    end
+    
+    if(id == Gosu::KbSpace)
+      @bullets.push Bullet.new(self, @player.x, @player.y, @player.angle)
     end
   end
 end
