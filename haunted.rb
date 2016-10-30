@@ -58,9 +58,6 @@ class Haunted < Gosu::Window
 
   def draw_start
     @background_image.draw(0,0,0)
-    @xlarge_font.draw("Welcome to Haunted!", 100, 200, 0, 1.0, 1.0, 0xff_000000)
-    @large_font.draw("Press any key to initiate the game!", 100, 300, 0, 1.0, 1.0, 0xff_000000)
-    @large_font.draw("Press ESC to exit", 100, 350, 0, 1.0, 1.0, 0xff_000000)
   end
 
   def draw_scene1
@@ -163,7 +160,7 @@ class Haunted < Gosu::Window
   def button_down_end(id)
     if id == Gosu::KbReturn
       initialize_scene1
-    elsif id == Gosu::KbQ
+    elsif id == Gosu::KbEscape
       close
     end
   end
