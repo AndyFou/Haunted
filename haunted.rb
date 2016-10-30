@@ -7,7 +7,7 @@ class Haunted < Gosu::Window
   WIN_WIDTH = 900
   WIN_HEIGHT = 900
   ENEMY_FREQUENCY = 0.005
-  MAX_ENEMIES = 5
+  MAX_ENEMIES = 1
 
   def initialize       ## constructor
     super(WIN_WIDTH,WIN_HEIGHT)
@@ -23,7 +23,7 @@ class Haunted < Gosu::Window
     @xlarge_font = Gosu::Font.new(72)
   end
 
-  def initialize_game
+  def initialize_scene1
     # Create images
     @background_image = Gosu::Image.new("images/background.jpg", :tileable => true)
     @star = Gosu::Image.new("images/star.png")
@@ -32,7 +32,7 @@ class Haunted < Gosu::Window
     @player = Player.new(self)
     @enemies = []
     @bullets = []
-    @scene = :game
+    @scene = :scene1
     @enemies_appeared = 0
     @enemies_destroyed = 0
   end
@@ -49,8 +49,8 @@ class Haunted < Gosu::Window
     case @scene
     when :start
       draw_start
-    when :game
-      draw_game
+    when :scene1
+      draw_scene1
     when :end
       draw_end
     end
@@ -59,9 +59,11 @@ class Haunted < Gosu::Window
   def draw_start
     @background_image.draw(0,0,0)
     @xlarge_font.draw("Welcome to Haunted!", 100, 200, 0, 1.0, 1.0, 0xff_000000)
+    @large_font.draw("Press any key to initiate the game!", 100, 300, 0, 1.0, 1.0, 0xff_000000)
+    @large_font.draw("Press ESC to exit", 100, 350, 0, 1.0, 1.0, 0xff_000000)
   end
 
-  def draw_game
+  def draw_scene1
     # Draw images
     @background_image.draw(0,0,0)
     @star.draw(150, 680, 0)
@@ -76,7 +78,7 @@ class Haunted < Gosu::Window
     end
 
     @small_font.draw("Background Image: www.freevectors.net, Other Images: www.iconarchive.com", 10, 880, 0, 1.0, 1.0, 0xff_ffffff)
-    @medium_font.draw("Score: " + @enemies_destroyed.to_s, 650, 10, 0, 1.0, 1.0, 0xff_ffff00)
+    @medium_font.draw("Score: " + @enemies_destroyed.to_s, 800, 10, 0, 1.0, 1.0, 0xff_ffff00)
   end
 
   def draw_end
@@ -84,18 +86,19 @@ class Haunted < Gosu::Window
     @xlarge_font.draw('Game Over!', 280, 200, 3, 1.0, 1.0, 0xff_ffff00)
     @large_font.draw('Your Score is: ' + @enemies_destroyed.to_s, 330, 300, 3, 1.0, 1.0, 0xff_ffff00)
     @large_font.draw('Press Enter to Play Again', 260, 400, 3)
+    @large_font.draw('Press Q to quit!', 260, 500, 3)
   end
 
   def update
     case @scene
-    when :game
-      update_game
+    when :scene1
+      update_scene1
     when :end
       update_end
     end
   end
 
-  def update_game
+  def update_scene1
     # move player
     @player.turn_left if button_down?(Gosu::KbLeft)
     @player.turn_right if button_down?(Gosu::KbRight)
@@ -136,28 +139,32 @@ class Haunted < Gosu::Window
     case @scene
     when :start
       button_down_start(id)
-    when :game
-      button_down_game(id)
+    when :scene1
+      button_down_scene1(id)
     when :end
       button_down_end(id)
     end
   end
 
   def button_down_start(id)
-    initialize_game
+    if id == Gosu::KbEscape
+      close
+    else
+      initialize_scene1
+    end
   end
 
-  def button_down_game(id)
+  def button_down_scene1(id)
     if id==Gosu::KbSpace
       @bullets.push Bullet.new(self, @player.x, @player.y, @player.angle)
     end
   end
 
   def button_down_end(id)
-    # reset the game
     if id == Gosu::KbReturn
-      initialize_game
-      ### how to reset the player position??
+      initialize_scene1
+    elsif id == Gosu::KbQ
+      close
     end
   end
 
