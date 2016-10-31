@@ -7,7 +7,7 @@ class Haunted < Gosu::Window
   WIN_WIDTH = 900
   WIN_HEIGHT = 900
   ENEMY_FREQUENCY = 0.005
-  MAX_ENEMIES = 1
+  MAX_ENEMIES = 10
 
   def initialize       ## constructor
     super(WIN_WIDTH,WIN_HEIGHT)
@@ -38,10 +38,8 @@ class Haunted < Gosu::Window
   end
 
   def initialize_end
-    #@msg = "You destroyed #{@enemies_destroyed} enemies!"
-    #@bottom_msg = "Press Enter to play again, or ESC to quit!"
     @go_color = Gosu::Color::BLACK      # game over background color
-
+    @background_image = Gosu::Image.new('images/end_screen.jpg')
     @scene = :end
   end
 
@@ -79,11 +77,8 @@ class Haunted < Gosu::Window
   end
 
   def draw_end
-    draw_quad(0, 0, @go_color, 900, 0, @go_color, 900, 900, @go_color, 0, 900, @go_color)
-    @xlarge_font.draw('Game Over!', 280, 200, 3, 1.0, 1.0, 0xff_ffff00)
-    @large_font.draw('Your Score is: ' + @enemies_destroyed.to_s, 330, 300, 3, 1.0, 1.0, 0xff_ffff00)
-    @large_font.draw('Press Enter to Play Again', 260, 400, 3)
-    @large_font.draw('Press Q to quit!', 260, 500, 3)
+    @background_image.draw(0,0,0)
+    #@large_font.draw('Your Score is: ' + @enemies_destroyed.to_s, 330, 300, 3, 1.0, 1.0, 0xff_000000)
   end
 
   def update
